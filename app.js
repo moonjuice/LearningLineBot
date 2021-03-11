@@ -10,6 +10,8 @@ const config = {
 const app = express();
 const file = './sqlite3.db';
 var sqlite3 = require('sqlite3').verbose();
+const schedule = require('node-schedule');
+
 var db = new sqlite3.Database(file);
 db.run("CREATE TABLE IF NOT EXISTS  USERS (user_id TEXT, user_name TEXT)");
 var sqlStr = "SELECT * FROM USERS";
@@ -52,3 +54,33 @@ function handleEvent(event) {
 }
 
 app.listen(3000);
+
+let rule = new schedule.RecurrenceRule();
+rule.dayOfWeek = [0, new schedule.Range(1, 5)];
+rule.hour = 9;
+rule.minute = 0;
+rule.tz = 'Asia/Taipei';
+let job = schedule.scheduleJob(rule, () => {
+    db.each(sqlStr, function (err, row) {
+        const message = {
+            type: 'text',
+            text: '早安 ' + row.user_name + ', 上班打卡啦!!!'
+        };
+        client.pushMessage(row.user_id, message);
+    });
+});
+
+let rule2 = new schedule.RecurrenceRule();
+rule2.dayOfWeek = [0, new schedule.Range(1, 5)];
+rule2.hour = 13;
+rule2.minute = 30;
+rule2.tz = 'Asia/Taipei';
+let job = schedule.scheduleJob(rule2, () => {
+    db.each(sqlStr, function (err, row) {
+        const message = {
+            type: 'text',
+            text: '午安 ' + row.user_name + ', 下午一點半啦!!!'
+        };
+        client.pushMessage(row.user_id, message);
+    });
+});
