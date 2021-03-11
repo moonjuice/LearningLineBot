@@ -8,6 +8,7 @@ const config = {
     channelSecret: process.env.LIEN_CHANNEL_SECRET
 };
 const app = express();
+const PORT = process.env.PORT || 80;
 const file = './sqlite3.db';
 var sqlite3 = require('sqlite3').verbose();
 const schedule = require('node-schedule');
@@ -55,7 +56,7 @@ function handleEvent(event) {
     });
 }
 
-app.listen(3000);
+app.listen(PORT);
 
 let rule = new schedule.RecurrenceRule();
 rule.dayOfWeek = [0, new schedule.Range(1, 5)];
