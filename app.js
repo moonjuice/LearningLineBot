@@ -1,6 +1,6 @@
 'use strict';
 const result = require('dotenv').config();
-if (result.error) throw result.error
+if (result.error) { console.log(result.error); }
 const express = require('express');
 const line = require('@line/bot-sdk');
 const config = {
