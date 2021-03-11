@@ -16,7 +16,9 @@ var db = new sqlite3.Database(file);
 db.run("CREATE TABLE IF NOT EXISTS  USERS (user_id TEXT, user_name TEXT)");
 var sqlStr = "SELECT * FROM USERS";
 db.each(sqlStr, function (err, row) {
-    console.log(row.user_id + ": " + row.user_name);
+    if (row) {
+        console.log(row.user_id + ": " + row.user_name);
+    }
 });
 
 
@@ -62,11 +64,13 @@ rule.minute = 0;
 rule.tz = 'Asia/Taipei';
 let job = schedule.scheduleJob(rule, () => {
     db.each(sqlStr, function (err, row) {
-        const message = {
-            type: 'text',
-            text: '早安 ' + row.user_name + ', 上班打卡啦!!!'
-        };
-        client.pushMessage(row.user_id, message);
+        if (row) {
+            const message = {
+                type: 'text',
+                text: '早安 ' + row.user_name + ', 上班打卡啦!!!'
+            };
+            client.pushMessage(row.user_id, message);
+        }
     });
 });
 
@@ -77,10 +81,12 @@ rule2.minute = 30;
 rule2.tz = 'Asia/Taipei';
 let job2 = schedule.scheduleJob(rule2, () => {
     db.each(sqlStr, function (err, row) {
-        const message = {
-            type: 'text',
-            text: '午安 ' + row.user_name + ', 下午一點半啦!!!'
-        };
-        client.pushMessage(row.user_id, message);
+        if (row) {
+            const message = {
+                type: 'text',
+                text: '午安 ' + row.user_name + ', 下午一點半啦!!!'
+            };
+            client.pushMessage(row.user_id, message);
+        }
     });
 });
