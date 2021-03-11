@@ -75,7 +75,7 @@ rule2.dayOfWeek = [0, new schedule.Range(1, 5)];
 rule2.hour = 13;
 rule2.minute = 30;
 rule2.tz = 'Asia/Taipei';
-let job = schedule.scheduleJob(rule2, () => {
+let job2 = schedule.scheduleJob(rule2, () => {
     db.each(sqlStr, function (err, row) {
         const message = {
             type: 'text',
