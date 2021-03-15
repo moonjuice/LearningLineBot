@@ -1,6 +1,6 @@
 'use strict';
 const result = require('dotenv').config();
-if (result.error) { console.log(result.error); }
+//if (result.error) { console.log(result.error); }
 const express = require('express');
 const line = require('@line/bot-sdk');
 const config = {
@@ -22,6 +22,9 @@ db.each(sqlStr, function (err, row) {
     }
 });
 
+app.get('/', (req, res) => {
+    res.send('It\'s Work!');
+});
 
 app.post('/webhook', line.middleware(config), (req, res) => {
     Promise
