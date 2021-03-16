@@ -4,4 +4,5 @@ COPY ./package.json ./
 RUN npm install
 COPY ./*.js ./
 EXPOSE 80
+RUN mkdir data
 CMD ["npm", "start"]
