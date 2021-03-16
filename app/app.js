@@ -1,5 +1,5 @@
 'use strict';
-const result = require('dotenv').config();
+const result = require('dotenv').config({ path: './data/.env' });
 //if (result.error) { console.log(result.error); }
 const express = require('express');
 const line = require('@line/bot-sdk');
@@ -9,7 +9,7 @@ const config = {
 };
 const app = express();
 const PORT = process.env.PORT || 80;
-const file = './sqlite3.db';
+const file = './data/sqlite3.db';
 var sqlite3 = require('sqlite3').verbose();
 const schedule = require('node-schedule');
 
@@ -22,11 +22,11 @@ db.each(sqlStr, function (err, row) {
     }
 });
 
-app.get('/', (req, res) => {
+app.get('/learning-line-bot', (req, res) => {
     res.send('It\'s Work!');
 });
 
-app.post('/webhook', line.middleware(config), (req, res) => {
+app.post('/learning-line-bot/webhook', line.middleware(config), (req, res) => {
     Promise
         .all(req.body.events.map(handleEvent))
         .then((result) => res.json(result));
