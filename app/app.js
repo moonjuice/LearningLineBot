@@ -26,7 +26,11 @@ app.get('/learning-line-bot', (req, res) => {
     res.send('It\'s Work!');
 });
 
-app.post(/.*webhook$/, line.middleware(config), (req, res) => {
+app.get('/learning-line-bot/webhook', (req, res) => {
+    res.send('It\'s Work, linebot!');
+});
+
+app.post('/learning-line-bot/webhook', line.middleware(config), (req, res) => {
     Promise
         .all(req.body.events.map(handleEvent))
         .then((result) => res.json(result));
