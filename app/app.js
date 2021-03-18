@@ -110,19 +110,30 @@ function handleEvent(event) {
 
 app.listen(PORT);
 
+var userSQLStr = "SELECT * FROM USERS";
+var groupSQLStr = "SELECT * FROM USERS";
 let rule = new schedule.RecurrenceRule();
 rule.dayOfWeek = [0, new schedule.Range(1, 5)];
 rule.hour = 8;
 rule.minute = 30;
 rule.tz = 'Asia/Taipei';
 let job = schedule.scheduleJob(rule, () => {
-    db.each(sqlStr, function (err, row) {
+    db.each(userSQLStr, function (err, row) {
         if (row) {
             const message = {
                 type: 'text',
                 text: '早安 ' + row.user_name + ', 現在時間上午8點30分！'
             };
             client.pushMessage(row.user_id, message);
+        }
+    });
+    db.each(groupSQLStr, function (err, row) {
+        if (row) {
+            const message = {
+                type: 'text',
+                text: '大家早安! 現在時間上午8點30分！'
+            };
+            client.pushMessage(row.group_id, message);
         }
     });
 });
@@ -133,13 +144,22 @@ rule2.hour = 19;
 rule2.minute = 0;
 rule2.tz = 'Asia/Taipei';
 let job2 = schedule.scheduleJob(rule2, () => {
-    db.each(sqlStr, function (err, row) {
+    db.each(userSQLStr, function (err, row) {
         if (row) {
             const message = {
                 type: 'text',
                 text: '晚安 ' + row.user_name + ', 現在時間晚上7點整！'
             };
             client.pushMessage(row.user_id, message);
+        }
+    });
+    db.each(groupSQLStr, function (err, row) {
+        if (row) {
+            const message = {
+                type: 'text',
+                text: '大家晚安! 現在時間晚上7點整！'
+            };
+            client.pushMessage(row.group_id, message);
         }
     });
 });
