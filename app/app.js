@@ -57,10 +57,11 @@ function handleEvent(event) {
         return Promise.resolve(null);
     }
 
-    return client.replyMessage(event.replyToken, {
+    /*return client.replyMessage(event.replyToken, {
         type: 'text',
         text: event.message.text
-    });
+    });*/
+    return Promise.resolve(null);
 }
 
 app.listen(PORT);
@@ -85,7 +86,7 @@ let job = schedule.scheduleJob(rule, () => {
 let rule2 = new schedule.RecurrenceRule();
 rule2.dayOfWeek = [0, new schedule.Range(1, 5)];
 rule2.hour = 19;
-rule2.minute = 00;
+rule2.minute = 0;
 rule2.tz = 'Asia/Taipei';
 let job2 = schedule.scheduleJob(rule2, () => {
     db.each(sqlStr, function (err, row) {
