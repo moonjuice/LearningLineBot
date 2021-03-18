@@ -14,12 +14,34 @@ var sqlite3 = require('sqlite3').verbose();
 const schedule = require('node-schedule');
 
 var db = new sqlite3.Database(file);
-db.run("CREATE TABLE IF NOT EXISTS  USERS (user_id TEXT, user_name TEXT)");
-var sqlStr = "SELECT * FROM USERS";
-db.each(sqlStr, function (err, row) {
-    if (row) {
-        console.log(row.user_id + ": " + row.user_name);
+db.serialize(function () {
+    db.run("CREATE TABLE IF NOT EXISTS USERS (user_id TEXT, user_name TEXT)");
+    db.run("CREATE TABLE IF NOT EXISTS VERSION (db_version INT)");
+    var old_db_version = 0;
+    var sqlStr = "SELECT db_version FROM VERSION";
+    db.get(sqlStr, function (err, row) {
+        if (row) {
+            old_db_version = row.db_version;
+        } else {
+            db.run("INSERT INTO VERSION (db_version) VALUES (0)");
+        }
+    });
+    var new_db_version = old_db_version;
+    switch (old_db_version) {
+        case 0:
+            db.run("ALTER TABLE USERS ADD COLUMN group_id TEXT DEFAULT '0'");
+            new_db_version++;
     }
+    if (old_db_version != new_db_version) {
+        db.run("UPDATE VERSION SET db_version = " + new_db_version + " WHERE db_version = " + old_db_version + " ");
+    }
+    console.log("DB Version: " + old_db_version + " -> " + new_db_version);
+    sqlStr = "SELECT * FROM USERS";
+    db.each(sqlStr, function (err, row) {
+        if (row) {
+            console.log(row.user_id + ": " + row.user_name + ", " + row.group_id);
+        }
+    });
 });
 
 app.get('/learning-line-bot', (req, res) => {
