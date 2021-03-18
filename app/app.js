@@ -67,15 +67,15 @@ app.listen(PORT);
 
 let rule = new schedule.RecurrenceRule();
 rule.dayOfWeek = [0, new schedule.Range(1, 5)];
-rule.hour = 9;
-rule.minute = 0;
+rule.hour = 8;
+rule.minute = 30;
 rule.tz = 'Asia/Taipei';
 let job = schedule.scheduleJob(rule, () => {
     db.each(sqlStr, function (err, row) {
         if (row) {
             const message = {
                 type: 'text',
-                text: '早安 ' + row.user_name + ', 上班打卡啦!!!'
+                text: '早安 ' + row.user_name + ', 現在時間上午8點30分！'
             };
             client.pushMessage(row.user_id, message);
         }
@@ -84,15 +84,15 @@ let job = schedule.scheduleJob(rule, () => {
 
 let rule2 = new schedule.RecurrenceRule();
 rule2.dayOfWeek = [0, new schedule.Range(1, 5)];
-rule2.hour = 13;
-rule2.minute = 30;
+rule2.hour = 19;
+rule2.minute = 00;
 rule2.tz = 'Asia/Taipei';
 let job2 = schedule.scheduleJob(rule2, () => {
     db.each(sqlStr, function (err, row) {
         if (row) {
             const message = {
                 type: 'text',
-                text: '午安 ' + row.user_name + ', 下午一點半啦!!!'
+                text: '晚安 ' + row.user_name + ', 現在時間晚上7點整！'
             };
             client.pushMessage(row.user_id, message);
         }
