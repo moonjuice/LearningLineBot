@@ -111,7 +111,7 @@ function handleEvent(event) {
 app.listen(PORT);
 
 var userSQLStr = "SELECT * FROM USERS";
-var groupSQLStr = "SELECT * FROM USERS";
+var groupSQLStr = "SELECT * FROM GROUPS";
 let rule = new schedule.RecurrenceRule();
 rule.dayOfWeek = [0, new schedule.Range(1, 5)];
 rule.hour = 8;
